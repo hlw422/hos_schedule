@@ -86,6 +86,10 @@ func Register(r *gin.Engine, db *gorm.DB, rdb *redis.Client, cfg *config.Config)
 		auth.GET("/appointments/:id", appointmentHandler.GetByID)
 		auth.PUT("/appointments/:id/cancel", appointmentHandler.Cancel)
 
+		paymentHandler := handler.NewPaymentHandler(appointmentService)
+		api.POST("/payments/callback", paymentHandler.WechatPayCallback)
+		auth.POST("/payments/:id/create", paymentHandler.CreatePayment)
+
 		notificationRepo := repository.NewNotificationRepo(db)
 		wechatClient := wechat.NewClient(&cfg.Wechat)
 		notificationService := service.NewNotificationService(notificationRepo, wechatClient)

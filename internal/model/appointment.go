@@ -13,6 +13,7 @@ type Appointment struct {
 	Status       string    `gorm:"size:20;default:PENDING_PAY" json:"status"`
 	PayType      string    `gorm:"size:20" json:"pay_type,omitempty"`
 	PayAmount    float64   `gorm:"type:decimal(10,2)" json:"pay_amount,omitempty"`
+	PayID        string    `gorm:"size:100" json:"pay_id,omitempty"`
 	CancelReason string    `gorm:"size:255" json:"cancel_reason,omitempty"`
 	VisitNo      string    `gorm:"size:50" json:"visit_no,omitempty"`
 	CreatedAt    time.Time `json:"created_at"`

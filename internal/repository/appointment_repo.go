@@ -50,6 +50,21 @@ func (r *AppointmentRepo) UpdateStatus(id int64, status string) error {
 		Update("status", status).Error
 }
 
+func (r *AppointmentRepo) UpdatePayInfo(id int64, status, payID string, payAmount float64) error {
+	return r.db.Model(&model.Appointment{}).Where("id = ?", id).
+		Updates(map[string]interface{}{
+			"status":     status,
+			"pay_id":     payID,
+			"pay_amount": payAmount,
+		}).Error
+}
+
+func (r *AppointmentRepo) GetByPayID(payID string) (*model.Appointment, error) {
+	var appointment model.Appointment
+	err := r.db.Where("pay_id = ?", payID).First(&appointment).Error
+	return &appointment, err
+}
+
 func (r *AppointmentRepo) Exists(userID, doctorID int64, date, timePeriod string) (bool, error) {
 	var count int64
 	err := r.db.Model(&model.Appointment{}).

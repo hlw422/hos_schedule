@@ -51,6 +51,11 @@ func (s *AppointmentService) Create(ctx context.Context, userID int64, req *Crea
 		return nil, fmt.Errorf("already have appointment for this slot")
 	}
 
+	schedule, err := s.scheduleRepo.GetByID(req.ScheduleID)
+	if err != nil {
+		return nil, fmt.Errorf("schedule not found")
+	}
+
 	success, err := s.slotManager.DeductSlot(ctx, req.ScheduleID)
 	if err != nil {
 		if err := s.scheduleRepo.DecrementRemain(req.ScheduleID); err != nil {
@@ -61,6 +66,13 @@ func (s *AppointmentService) Create(ctx context.Context, userID int64, req *Crea
 		return nil, fmt.Errorf("no remaining slots")
 	}
 
+	status := "PENDING_PAY"
+	if req.PayType == "ONSITE" {
+		status = "PAID"
+	}
+
+	visitNo := s.generateVisitNo(req.Date)
+
 	appointment := &model.Appointment{
 		PatientID:  req.PatientID,
 		DoctorID:   req.DoctorID,
@@ -69,7 +81,9 @@ func (s *AppointmentService) Create(ctx context.Context, userID int64, req *Crea
 		Date:       req.Date,
 		TimePeriod: req.TimePeriod,
 		PayType:    req.PayType,
-		Status:     "PENDING_PAY",
+		PayAmount:  schedule.Fee,
+		Status:     status,
+		VisitNo:    visitNo,
 	}
 
 	if err := s.appointmentRepo.Create(appointment); err != nil {
@@ -78,6 +92,12 @@ func (s *AppointmentService) Create(ctx context.Context, userID int64, req *Crea
 	}
 
 	return appointment, nil
+}
+
+func (s *AppointmentService) generateVisitNo(date string) string {
+	var count int64
+	s.db.Model(&model.Appointment{}).Where("date = ?", date).Count(&count)
+	return fmt.Sprintf("V%s-%03d", date, count+1)
 }
 
 func (s *AppointmentService) Cancel(ctx context.Context, id int64, reason string) error {
@@ -111,4 +131,18 @@ func (s *AppointmentService) ListByUser(userID int64, status string) ([]model.Ap
 
 func (s *AppointmentService) ListByDoctor(doctorID int64, date string) ([]model.Appointment, error) {
 	return s.appointmentRepo.ListByDoctor(doctorID, date)
+}
+
+func (s *AppointmentService) HandlePaymentCallback(ctx context.Context, payID string, amount float64) error {
+	appointment, err := s.appointmentRepo.GetByPayID(payID)
+	if err != nil {
+		return fmt.Errorf("appointment not found")
+	}
+	if appointment.Status != "PENDING_PAY" {
+		return fmt.Errorf("invalid appointment status: %s", appointment.Status)
+	}
+	if err := s.appointmentRepo.UpdatePayInfo(appointment.ID, "PAID", payID, amount); err != nil {
+		return fmt.Errorf("failed to update payment info: %w", err)
+	}
+	return nil
 }

@@ -11,6 +11,7 @@ type Schedule struct {
 	TotalCount  int       `json:"total_count"`
 	UsedCount   int       `gorm:"default:0" json:"used_count"`
 	RemainCount int       `json:"remain_count"`
+	Fee         float64   `gorm:"type:decimal(10,2);default:0" json:"fee"`
 	Status      int8      `gorm:"default:1" json:"status"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
