@@ -1,0 +1,53 @@
+<view class="container">
+  <!-- 成功图标 -->
+  <view class="success-header">
+    <image src="/images/success.png" class="success-icon"></image>
+    <text class="success-title">预约成功</text>
+    <text class="success-desc">请按时就诊，祝您早日康复</text>
+  </view>
+
+  <!-- 预约详情 -->
+  <view class="card">
+    <text class="card-title">预约详情</text>
+    <view class="info-row">
+      <text class="info-label">预约编号</text>
+      <text class="info-value">{{appointment.order_no}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">医生</text>
+      <text class="info-value">{{appointment.doctor_name}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">科室</text>
+      <text class="info-value">{{appointment.department_name}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">就诊人</text>
+      <text class="info-value">{{appointment.patient_name}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">就诊时间</text>
+      <text class="info-value">{{appointment.schedule_date}} {{appointment.period === 'morning' ? '上午' : '下午'}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">就诊地点</text>
+      <text class="info-value">{{appointment.address}}</text>
+    </view>
+  </view>
+
+  <!-- 温馨提示 -->
+  <view class="card">
+    <text class="card-title">温馨提示</text>
+    <view class="tips">
+      <text class="tip-item">1. 请携带有效身份证件按时就诊</text>
+      <text class="tip-item">2. 建议提前15分钟到达诊室</text>
+      <text class="tip-item">3. 如需取消预约，请提前24小时操作</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="btn-group">
+    <button class="btn-secondary" bindtap="goList">查看我的预约</button>
+    <button class="btn-primary" bindtap="goHome">返回首页</button>
+  </view>
+</view>

@@ -1,0 +1,21 @@
+<view class="container">
+  <view class="card">
+    <view class="form-item">
+      <text class="label">停诊日期</text>
+      <picker mode="date" bindchange="onDateChange">
+        <view class="picker">{{date || '请选择'}}</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="label">时段</text>
+      <picker range="{{periods}}" bindchange="onPeriodChange">
+        <view class="picker">{{period || '请选择'}}</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="label">原因</text>
+      <textarea placeholder="请输入停诊原因" bindinput="onReasonInput" />
+    </view>
+    <button type="primary" bindtap="submit">提交申请</button>
+  </view>
+</view>

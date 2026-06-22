@@ -1,0 +1,46 @@
+<view class="container">
+  <!-- 状态标签 -->
+  <view class="status-tabs">
+    <view class="status-tab {{currentStatus === 'all' ? 'active' : ''}}" bindtap="setStatus" data-status="all">全部</view>
+    <view class="status-tab {{currentStatus === 'pending' ? 'active' : ''}}" bindtap="setStatus" data-status="pending">待就诊</view>
+    <view class="status-tab {{currentStatus === 'completed' ? 'active' : ''}}" bindtap="setStatus" data-status="completed">已完成</view>
+    <view class="status-tab {{currentStatus === 'cancelled' ? 'active' : ''}}" bindtap="setStatus" data-status="cancelled">已取消</view>
+  </view>
+
+  <!-- 预约列表 -->
+  <view class="appointment-list">
+    <view class="appointment-card" wx:for="{{appointments}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="card-header">
+        <text class="order-no">预约编号：{{item.order_no}}</text>
+        <text class="status-tag {{item.status}}">{{item.status_text}}</text>
+      </view>
+      <view class="card-body">
+        <view class="info-row">
+          <text class="info-label">医生</text>
+          <text class="info-value">{{item.doctor_name}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">科室</text>
+          <text class="info-value">{{item.department_name}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">就诊人</text>
+          <text class="info-value">{{item.patient_name}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">时间</text>
+          <text class="info-value">{{item.schedule_date}} {{item.period === 'morning' ? '上午' : '下午'}}</text>
+        </view>
+      </view>
+      <view class="card-footer" wx:if="{{item.status === 'pending'}}">
+        <button class="btn-cancel" catchtap="cancelAppointment" data-id="{{item.id}}">取消预约</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{!loading && appointments.length === 0}}">
+    <image src="/images/empty.png" class="empty-icon"></image>
+    <text class="empty-text">暂无预约记录</text>
+  </view>
+</view>

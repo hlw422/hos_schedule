@@ -1,0 +1,50 @@
+<view class="container">
+  <!-- 用户信息 -->
+  <view class="user-header">
+    <image src="{{userInfo.avatar || '/images/avatar-default.png'}}" class="user-avatar"></image>
+    <view class="user-info">
+      <text class="user-name">{{userInfo.nickname || '未登录'}}</text>
+      <text class="user-phone" wx:if="{{userInfo.phone}}">{{userInfo.phone}}</text>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-group">
+    <view class="menu-item" bindtap="goAppointments">
+      <view class="menu-left">
+        <image src="/images/order.png" class="menu-icon"></image>
+        <text class="menu-text">我的预约</text>
+      </view>
+      <image src="/images/arrow-right.png" class="arrow-icon"></image>
+    </view>
+    <view class="menu-item" bindtap="goPatients">
+      <view class="menu-left">
+        <image src="/images/patient.png" class="menu-icon"></image>
+        <text class="menu-text">就诊人管理</text>
+      </view>
+      <image src="/images/arrow-right.png" class="arrow-icon"></image>
+    </view>
+  </view>
+
+  <view class="menu-group">
+    <view class="menu-item" bindtap="goAbout">
+      <view class="menu-left">
+        <image src="/images/about.png" class="menu-icon"></image>
+        <text class="menu-text">关于我们</text>
+      </view>
+      <image src="/images/arrow-right.png" class="arrow-icon"></image>
+    </view>
+    <view class="menu-item" bindtap="callService">
+      <view class="menu-left">
+        <image src="/images/service.png" class="menu-icon"></image>
+        <text class="menu-text">联系客服</text>
+      </view>
+      <image src="/images/arrow-right.png" class="arrow-icon"></image>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-btn" wx:if="{{userInfo}}" bindtap="logout">
+    <text>退出登录</text>
+  </view>
+</view>

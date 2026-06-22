@@ -1,0 +1,57 @@
+<view class="container">
+  <!-- 预约信息 -->
+  <view class="card">
+    <text class="card-title">预约信息</text>
+    <view class="info-row">
+      <text class="info-label">医生</text>
+      <text class="info-value">{{doctor.name}} {{doctor.title}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">科室</text>
+      <text class="info-value">{{doctor.department_name}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">时间</text>
+      <text class="info-value">{{schedule.date}} {{schedule.period === 'morning' ? '上午' : '下午'}} {{schedule.start_time}}-{{schedule.end_time}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">费用</text>
+      <text class="info-value fee">¥{{schedule.fee}}</text>
+    </view>
+  </view>
+
+  <!-- 选择就诊人 -->
+  <view class="card">
+    <view class="card-header">
+      <text class="card-title">选择就诊人</text>
+      <text class="add-btn" bindtap="goAddPatient">+ 添加</text>
+    </view>
+    <view class="patient-list">
+      <view class="patient-item {{selectedPatient === item.id ? 'selected' : ''}}" wx:for="{{patients}}" wx:key="id" bindtap="selectPatient" data-id="{{item.id}}">
+        <view class="patient-info">
+          <text class="patient-name">{{item.name}}</text>
+          <text class="patient-id">{{item.id_card}}</text>
+        </view>
+        <view class="patient-check" wx:if="{{selectedPatient === item.id}}">
+          <image src="/images/check.png" class="check-icon"></image>
+        </view>
+      </view>
+    </view>
+    <view class="empty-patient" wx:if="{{patients.length === 0}}">
+      <text>暂无就诊人，请先添加</text>
+    </view>
+  </view>
+
+  <!-- 症状描述 -->
+  <view class="card">
+    <text class="card-title">症状描述（选填）</text>
+    <textarea class="symptom-input" placeholder="请简要描述您的症状" value="{{symptom}}" bindinput="onSymptomInput" maxlength="200" />
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="bottom-bar">
+    <button class="btn-primary" bindtap="submit" disabled="{{!selectedPatient || submitting}}">
+      {{submitting ? '提交中...' : '确认预约'}}
+    </button>
+  </view>
+</view>

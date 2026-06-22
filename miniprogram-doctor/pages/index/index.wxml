@@ -1,0 +1,16 @@
+<view class="container">
+  <view class="header">
+    <text class="date">{{today}}</text>
+    <text class="count">共 {{appointments.length}} 个预约</text>
+  </view>
+  <view class="list">
+    <view class="card" wx:for="{{appointments}}" wx:key="id">
+      <view class="patient-name">{{item.patient_name}}</view>
+      <view class="info">
+        <text>{{item.time_period === 'MORNING' ? '上午' : '下午'}}</text>
+        <text class="status {{item.status}}">{{item.status === 'PAID' ? '已支付' : '待支付'}}</text>
+      </view>
+    </view>
+    <view wx:if="{{appointments.length === 0}}" class="empty">今日暂无预约</view>
+  </view>
+</view>

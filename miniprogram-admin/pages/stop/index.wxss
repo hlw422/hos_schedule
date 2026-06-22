@@ -1,0 +1,6 @@
+.input {
+  background: #f5f7fa;
+  padding: 20rpx 24rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+}

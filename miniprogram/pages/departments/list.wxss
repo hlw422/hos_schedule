@@ -1,0 +1,57 @@
+.dept-list {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+}
+
+.dept-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.dept-item:last-child {
+  border-bottom: none;
+}
+
+.dept-info {
+  flex: 1;
+}
+
+.dept-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333333;
+  display: block;
+}
+
+.dept-desc {
+  font-size: 24rpx;
+  color: #999999;
+  margin-top: 8rpx;
+  display: block;
+}
+
+.arrow-icon {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 0;
+}
+
+.empty-icon {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999999;
+}

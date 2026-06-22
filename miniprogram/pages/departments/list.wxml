@@ -1,0 +1,18 @@
+<view class="container">
+  <!-- 科室列表 -->
+  <view class="dept-list">
+    <view class="dept-item" wx:for="{{departments}}" wx:key="id" bindtap="goDoctors" data-id="{{item.id}}">
+      <view class="dept-info">
+        <text class="dept-name">{{item.name}}</text>
+        <text class="dept-desc">{{item.description}}</text>
+      </view>
+      <image src="/images/arrow-right.png" class="arrow-icon"></image>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{!loading && departments.length === 0}}">
+    <image src="/images/empty.png" class="empty-icon"></image>
+    <text class="empty-text">暂无科室数据</text>
+  </view>
+</view>

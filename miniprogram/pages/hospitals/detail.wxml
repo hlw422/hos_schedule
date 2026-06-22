@@ -1,0 +1,40 @@
+<view class="container">
+  <!-- 医院信息 -->
+  <view class="hospital-header">
+    <image src="{{hospital.logo || '/images/hospital-default.png'}}" class="hospital-logo"></image>
+    <view class="hospital-info">
+      <text class="hospital-name">{{hospital.name}}</text>
+      <view class="hospital-tags">
+        <text class="tag tag-blue" wx:if="{{hospital.level}}">{{hospital.level}}</text>
+        <text class="tag tag-green" wx:if="{{hospital.type}}">{{hospital.type}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 医院简介 -->
+  <view class="card">
+    <text class="card-title">医院简介</text>
+    <text class="card-content">{{hospital.description || '暂无简介'}}</text>
+  </view>
+
+  <!-- 院区切换 -->
+  <view class="campus-tabs" wx:if="{{campuses.length > 1}}">
+    <view class="campus-tab {{currentCampus === index ? 'active' : ''}}" wx:for="{{campuses}}" wx:key="id" bindtap="switchCampus" data-index="{{index}}">
+      {{item.name}}
+    </view>
+  </view>
+
+  <!-- 科室列表 -->
+  <view class="section">
+    <text class="section-title">科室列表</text>
+    <view class="dept-list">
+      <view class="dept-item" wx:for="{{departments}}" wx:key="id" bindtap="goDeptDoctors" data-id="{{item.id}}">
+        <view class="dept-info">
+          <text class="dept-name">{{item.name}}</text>
+          <text class="dept-desc">{{item.description}}</text>
+        </view>
+        <image src="/images/arrow-right.png" class="arrow-icon"></image>
+      </view>
+    </view>
+  </view>
+</view>

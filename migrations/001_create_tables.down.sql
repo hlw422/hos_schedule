@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS appointments;
+DROP TABLE IF EXISTS patients;
+DROP TABLE IF EXISTS schedules;
+DROP TABLE IF EXISTS doctors;
+DROP TABLE IF EXISTS departments;
+DROP TABLE IF EXISTS campuses;
+DROP TABLE IF EXISTS hospitals;
+DROP TABLE IF EXISTS users;

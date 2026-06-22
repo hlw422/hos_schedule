@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="card">
+    <view class="form-item">
+      <text class="label">医生</text>
+      <picker range="{{doctors}}" range-key="name" bindchange="onDoctorChange">
+        <view class="picker">{{selectedDoctor.name || '请选择医生'}}</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="label">停诊日期</text>
+      <picker mode="date" start="{{today}}" bindchange="onDateChange">
+        <view class="picker">{{date || '请选择'}}</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="label">时段</text>
+      <picker range="{{periods}}" bindchange="onPeriodChange">
+        <view class="picker">{{period || '请选择'}}</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="label">原因（选填）</text>
+      <input class="input" placeholder="请输入停诊原因" bindinput="onReasonInput" value="{{reason}}" />
+    </view>
+    <button type="warn" bindtap="submit" disabled="{{!canSubmit}}">确认停诊</button>
+  </view>
+</view>
