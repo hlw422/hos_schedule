@@ -9,6 +9,8 @@ import (
 	"hos_schedule/internal/handler"
 	"hos_schedule/internal/middleware"
 	"hos_schedule/internal/pkg/response"
+	redisutil "hos_schedule/internal/pkg/redis"
+	"hos_schedule/internal/pkg/wechat"
 	"hos_schedule/internal/repository"
 	"hos_schedule/internal/service"
 )
@@ -72,5 +74,26 @@ func Register(r *gin.Engine, db *gorm.DB, rdb *redis.Client, cfg *config.Config)
 		auth.PUT("/patients/:id", patientHandler.Update)
 		auth.DELETE("/patients/:id", patientHandler.Delete)
 		auth.PUT("/patients/:id/default", patientHandler.SetDefault)
+
+		slotManager := redisutil.NewSlotManager(rdb)
+
+		appointmentRepo := repository.NewAppointmentRepo(db)
+		appointmentService := service.NewAppointmentService(db, appointmentRepo, scheduleRepo, slotManager)
+		appointmentHandler := handler.NewAppointmentHandler(appointmentService)
+
+		auth.POST("/appointments", appointmentHandler.Create)
+		auth.GET("/appointments", appointmentHandler.List)
+		auth.GET("/appointments/:id", appointmentHandler.GetByID)
+		auth.PUT("/appointments/:id/cancel", appointmentHandler.Cancel)
+
+		notificationRepo := repository.NewNotificationRepo(db)
+		wechatClient := wechat.NewClient(&cfg.Wechat)
+		notificationService := service.NewNotificationService(notificationRepo, wechatClient)
+		notificationHandler := handler.NewNotificationHandler(notificationService)
+
+		auth.POST("/notifications/subscribe", notificationHandler.Subscribe)
+
+		auth.GET("/doctor/schedules", doctorHandler.GetMySchedules)
+		auth.GET("/doctor/appointments", doctorHandler.GetTodayAppointments)
 	}
 }
