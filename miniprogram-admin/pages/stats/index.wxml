@@ -1,0 +1,35 @@
+<view class="container">
+  <view class="card">
+    <text class="title">本月预约趋势</text>
+    <view class="chart" wx:if="{{trend.length > 0}}">
+      <view class="bar" wx:for="{{trend}}" wx:key="date" style="height: {{item.count * 10 + 20}}px">
+        <text class="bar-label">{{item.date}}</text>
+      </view>
+    </view>
+    <view class="empty" wx:else>
+      <text>暂无数据</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="title">本月统计</text>
+    <view class="stats-grid">
+      <view class="stat-card">
+        <text class="stat-value">{{monthStats.total}}</text>
+        <text class="stat-label">总预约</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-value">{{monthStats.completed}}</text>
+        <text class="stat-label">已完成</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-value">{{monthStats.cancelled}}</text>
+        <text class="stat-label">已取消</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-value">{{monthStats.rate}}%</text>
+        <text class="stat-label">完成率</text>
+      </view>
+    </view>
+  </view>
+</view>

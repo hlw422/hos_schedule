@@ -1,0 +1,20 @@
+<view class="container">
+  <view class="calendar">
+    <view class="week-header">
+      <text wx:for="{{weekDays}}" wx:key="*this">{{item}}</text>
+    </view>
+    <view class="dates">
+      <view class="date-item {{item.isToday ? 'today' : ''}} {{item.hasSchedule ? 'has-schedule' : ''}}"
+            wx:for="{{dates}}" wx:key="date" bindtap="selectDate" data-date="{{item.date}}">
+        <text>{{item.day}}</text>
+        <text wx:if="{{item.hasSchedule}}" class="dot"></text>
+      </view>
+    </view>
+  </view>
+  <view class="schedule-list">
+    <view class="schedule-item" wx:for="{{schedules}}" wx:key="id">
+      <text class="period">{{item.time_period === 'MORNING' ? '上午' : '下午'}}</text>
+      <text class="count">{{item.remain_count}}/{{item.total_count}}</text>
+    </view>
+  </view>
+</view>
