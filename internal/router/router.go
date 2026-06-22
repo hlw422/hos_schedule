@@ -9,6 +9,7 @@ import (
 	"hos_schedule/internal/handler"
 	"hos_schedule/internal/middleware"
 	"hos_schedule/internal/pkg/response"
+	"hos_schedule/internal/repository"
 	"hos_schedule/internal/service"
 )
 
@@ -32,5 +33,20 @@ func Register(r *gin.Engine, db *gorm.DB, rdb *redis.Client, cfg *config.Config)
 				response.Success(c, gin.H{"user_id": userID})
 			})
 		}
+
+		hospitalRepo := repository.NewHospitalRepo(db)
+		hospitalService := service.NewHospitalService(hospitalRepo)
+		hospitalHandler := handler.NewHospitalHandler(hospitalService)
+
+		departmentRepo := repository.NewDepartmentRepo(db)
+		departmentService := service.NewDepartmentService(departmentRepo)
+		departmentHandler := handler.NewDepartmentHandler(departmentService)
+
+		api.GET("/hospitals", hospitalHandler.List)
+		api.GET("/hospitals/:id", hospitalHandler.GetByID)
+		api.GET("/hospitals/:id/campuses", hospitalHandler.GetCampuses)
+
+		api.GET("/departments", departmentHandler.List)
+		api.GET("/departments/:id", departmentHandler.GetByID)
 	}
 }
