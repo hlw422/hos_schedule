@@ -1,0 +1,58 @@
+<view class="container">
+  <!-- 医生信息 -->
+  <view class="doctor-header">
+    <image src="{{doctor.avatar || '/images/doctor-default.png'}}" class="doctor-avatar"></image>
+    <view class="doctor-info">
+      <view class="doctor-name-row">
+        <text class="doctor-name">{{doctor.name}}</text>
+        <text class="doctor-title">{{doctor.title}}</text>
+      </view>
+      <text class="doctor-dept">{{doctor.department_name}}</text>
+      <text class="doctor-hospital">{{doctor.hospital_name}}</text>
+    </view>
+  </view>
+
+  <!-- 医生简介 -->
+  <view class="card">
+    <text class="card-title">医生简介</text>
+    <text class="card-content">{{doctor.description || '暂无简介'}}</text>
+  </view>
+
+  <!-- 擅长领域 -->
+  <view class="card" wx:if="{{doctor.specialty}}">
+    <text class="card-title">擅长领域</text>
+    <text class="card-content">{{doctor.specialty}}</text>
+  </view>
+
+  <!-- 出诊时间 -->
+  <view class="section">
+    <text class="section-title">出诊时间</text>
+    <!-- 日期选择 -->
+    <scroll-view scroll-x class="date-scroll">
+      <view class="date-list">
+        <view class="date-item {{currentDate === index ? 'active' : ''}}" wx:for="{{dates}}" wx:key="date" bindtap="selectDate" data-index="{{index}}">
+          <text class="date-weekday">{{item.weekday}}</text>
+          <text class="date-day">{{item.day}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 时段选择 -->
+    <view class="schedule-list">
+      <view class="schedule-item {{item.remaining === 0 ? 'disabled' : ''}}" wx:for="{{schedules}}" wx:key="id" bindtap="selectSchedule" data-id="{{item.id}}" data-remaining="{{item.remaining}}">
+        <view class="schedule-info">
+          <text class="schedule-time">{{item.period === 'morning' ? '上午' : '下午'}} {{item.start_time}}-{{item.end_time}}</text>
+          <text class="schedule-fee">¥{{item.fee}}</text>
+        </view>
+        <text class="schedule-remaining {{item.remaining === 0 ? 'no-remaining' : ''}}">
+          {{item.remaining === 0 ? '已约满' : '剩余' + item.remaining + '个'}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 预约按钮 -->
+  <view class="bottom-bar">
+    <button class="btn-primary" bindtap="goConfirm" disabled="{{!selectedSchedule}}">预约挂号</button>
+  </view>
+</view>

@@ -1,0 +1,34 @@
+<view class="container">
+  <!-- 就诊人列表 -->
+  <view class="patient-list">
+    <view class="patient-card" wx:for="{{patients}}" wx:key="id">
+      <view class="patient-info" bindtap="goEdit" data-id="{{item.id}}">
+        <view class="patient-name-row">
+          <text class="patient-name">{{item.name}}</text>
+          <text class="default-tag" wx:if="{{item.is_default}}">默认</text>
+        </view>
+        <text class="patient-id">身份证：{{item.id_card}}</text>
+        <text class="patient-phone">手机号：{{item.phone}}</text>
+      </view>
+      <view class="patient-actions">
+        <view class="action-btn" catchtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.is_default}}">
+          <text>设为默认</text>
+        </view>
+        <view class="action-btn delete" catchtap="deletePatient" data-id="{{item.id}}">
+          <text>删除</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{!loading && patients.length === 0}}">
+    <image src="/images/empty.png" class="empty-icon"></image>
+    <text class="empty-text">暂无就诊人</text>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="bottom-bar">
+    <button class="btn-primary" bindtap="goAdd">+ 添加就诊人</button>
+  </view>
+</view>

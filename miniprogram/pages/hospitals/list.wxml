@@ -1,0 +1,28 @@
+<view class="container">
+  <!-- 搜索框 -->
+  <view class="search-bar">
+    <image src="/images/search.png" class="search-icon"></image>
+    <input class="search-input" placeholder="搜索医院" value="{{keyword}}" bindinput="onInput" bindconfirm="onSearch" />
+  </view>
+
+  <!-- 医院列表 -->
+  <view class="hospital-list">
+    <view class="hospital-card" wx:for="{{hospitals}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <image src="{{item.logo || '/images/hospital-default.png'}}" class="hospital-logo"></image>
+      <view class="hospital-info">
+        <text class="hospital-name">{{item.name}}</text>
+        <view class="hospital-tags">
+          <text class="tag tag-blue" wx:if="{{item.level}}">{{item.level}}</text>
+          <text class="tag tag-green" wx:if="{{item.type}}">{{item.type}}</text>
+        </view>
+        <text class="hospital-address">{{item.address}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{!loading && hospitals.length === 0}}">
+    <image src="/images/empty.png" class="empty-icon"></image>
+    <text class="empty-text">暂无医院数据</text>
+  </view>
+</view>

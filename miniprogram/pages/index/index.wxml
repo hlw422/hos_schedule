@@ -1,0 +1,56 @@
+<view class="container">
+  <!-- 搜索框 -->
+  <view class="search-bar" bindtap="goSearch">
+    <image src="/images/search.png" class="search-icon"></image>
+    <text class="search-text">搜索医院、科室、医生</text>
+  </view>
+
+  <!-- 轮播图 -->
+  <swiper class="banner" indicator-dots autoplay circular>
+    <swiper-item wx:for="{{banners}}" wx:key="id">
+      <image src="{{item.image}}" class="banner-image" mode="aspectFill"></image>
+    </swiper-item>
+  </swiper>
+
+  <!-- 快捷入口 -->
+  <view class="quick-entry">
+    <view class="entry-item" bindtap="goHospitals">
+      <image src="/images/hospital.png" class="entry-icon"></image>
+      <text>预约挂号</text>
+    </view>
+    <view class="entry-item" bindtap="goAppointments">
+      <image src="/images/order.png" class="entry-icon"></image>
+      <text>我的预约</text>
+    </view>
+    <view class="entry-item" bindtap="goPatients">
+      <image src="/images/patient.png" class="entry-icon"></image>
+      <text>就诊人</text>
+    </view>
+  </view>
+
+  <!-- 热门科室 -->
+  <view class="section">
+    <view class="section-title">热门科室</view>
+    <view class="dept-grid">
+      <view class="dept-item" wx:for="{{hotDepts}}" wx:key="name" bindtap="goDeptDoctors" data-id="{{item.id}}">
+        <image src="{{item.icon}}" class="dept-icon"></image>
+        <text>{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 推荐专家 -->
+  <view class="section">
+    <view class="section-title">推荐专家</view>
+    <view class="doctor-list">
+      <view class="doctor-card" wx:for="{{doctors}}" wx:key="id" bindtap="goDoctor" data-id="{{item.id}}">
+        <image src="{{item.avatar || '/images/doctor-default.png'}}" class="doctor-avatar"></image>
+        <view class="doctor-info">
+          <text class="doctor-name">{{item.name}}</text>
+          <text class="doctor-title">{{item.title}}</text>
+          <text class="doctor-specialty">{{item.specialty}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

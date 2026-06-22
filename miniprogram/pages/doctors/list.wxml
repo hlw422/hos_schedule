@@ -1,0 +1,32 @@
+<view class="container">
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <view class="filter-item {{currentFilter === 'all' ? 'active' : ''}}" bindtap="setFilter" data-filter="all">全部</view>
+    <view class="filter-item {{currentFilter === 'morning' ? 'active' : ''}}" bindtap="setFilter" data-filter="morning">上午</view>
+    <view class="filter-item {{currentFilter === 'afternoon' ? 'active' : ''}}" bindtap="setFilter" data-filter="afternoon">下午</view>
+  </view>
+
+  <!-- 医生列表 -->
+  <view class="doctor-list">
+    <view class="doctor-card" wx:for="{{doctors}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <image src="{{item.avatar || '/images/doctor-default.png'}}" class="doctor-avatar"></image>
+      <view class="doctor-info">
+        <view class="doctor-name-row">
+          <text class="doctor-name">{{item.name}}</text>
+          <text class="doctor-title">{{item.title}}</text>
+        </view>
+        <text class="doctor-dept">{{item.department_name}}</text>
+        <text class="doctor-specialty">{{item.specialty}}</text>
+        <view class="doctor-tags">
+          <text class="tag tag-blue" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">{{tag}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{!loading && doctors.length === 0}}">
+    <image src="/images/empty.png" class="empty-icon"></image>
+    <text class="empty-text">暂无医生数据</text>
+  </view>
+</view>

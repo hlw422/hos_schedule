@@ -1,0 +1,173 @@
+.doctor-header {
+  display: flex;
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.doctor-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 24rpx;
+}
+
+.doctor-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.doctor-name-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.doctor-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-right: 12rpx;
+}
+
+.doctor-title {
+  font-size: 24rpx;
+  color: #1677FF;
+}
+
+.doctor-dept {
+  font-size: 26rpx;
+  color: #666666;
+  margin-bottom: 4rpx;
+}
+
+.doctor-hospital {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.card-content {
+  font-size: 26rpx;
+  color: #666666;
+  line-height: 1.6;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.date-scroll {
+  white-space: nowrap;
+  margin-bottom: 20rpx;
+}
+
+.date-list {
+  display: inline-flex;
+}
+
+.date-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  margin-right: 16rpx;
+  background: #ffffff;
+  border-radius: 12rpx;
+  min-width: 100rpx;
+}
+
+.date-item.active {
+  background: #1677FF;
+}
+
+.date-weekday {
+  font-size: 24rpx;
+  color: #666666;
+  margin-bottom: 8rpx;
+}
+
+.date-item.active .date-weekday {
+  color: #ffffff;
+}
+
+.date-day {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.date-item.active .date-day {
+  color: #ffffff;
+}
+
+.schedule-list {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+}
+
+.schedule-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.schedule-item:last-child {
+  border-bottom: none;
+}
+
+.schedule-item.disabled {
+  opacity: 0.5;
+}
+
+.schedule-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-time {
+  font-size: 28rpx;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.schedule-fee {
+  font-size: 24rpx;
+  color: #FA8C16;
+}
+
+.schedule-remaining {
+  font-size: 24rpx;
+  color: #52C41A;
+}
+
+.schedule-remaining.no-remaining {
+  color: #999999;
+}
+
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx;
+  background: #ffffff;
+  box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
