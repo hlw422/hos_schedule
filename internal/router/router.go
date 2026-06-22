@@ -48,5 +48,29 @@ func Register(r *gin.Engine, db *gorm.DB, rdb *redis.Client, cfg *config.Config)
 
 		api.GET("/departments", departmentHandler.List)
 		api.GET("/departments/:id", departmentHandler.GetByID)
+
+		doctorRepo := repository.NewDoctorRepo(db)
+		doctorService := service.NewDoctorService(doctorRepo)
+		doctorHandler := handler.NewDoctorHandler(doctorService)
+
+		scheduleRepo := repository.NewScheduleRepo(db)
+		scheduleService := service.NewScheduleService(scheduleRepo)
+		scheduleHandler := handler.NewScheduleHandler(scheduleService)
+
+		api.GET("/doctors", doctorHandler.List)
+		api.GET("/doctors/:id", doctorHandler.GetByID)
+
+		api.GET("/schedules", scheduleHandler.List)
+		api.GET("/schedules/:id", scheduleHandler.GetByID)
+
+		patientRepo := repository.NewPatientRepo(db)
+		patientService := service.NewPatientService(patientRepo)
+		patientHandler := handler.NewPatientHandler(patientService)
+
+		auth.GET("/patients", patientHandler.List)
+		auth.POST("/patients", patientHandler.Create)
+		auth.PUT("/patients/:id", patientHandler.Update)
+		auth.DELETE("/patients/:id", patientHandler.Delete)
+		auth.PUT("/patients/:id/default", patientHandler.SetDefault)
 	}
 }
