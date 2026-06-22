@@ -42,3 +42,7 @@ func NotFound(c *gin.Context, message string) {
 func InternalError(c *gin.Context, message string) {
 	Error(c, 500, message)
 }
+
+func Forbidden(c *gin.Context, message string) {
+	Error(c, 403, message)
+}

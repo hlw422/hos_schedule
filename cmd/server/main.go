@@ -8,7 +8,9 @@ import (
 	"hos_schedule/internal/config"
 	"hos_schedule/internal/middleware"
 	"hos_schedule/internal/model"
+	redisutil "hos_schedule/internal/pkg/redis"
 	"hos_schedule/internal/router"
+	"hos_schedule/internal/worker"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,6 +44,10 @@ func main() {
 	if err := cfg.Redis.Ping(context.Background(), rdb); err != nil {
 		log.Fatalf("Failed to connect redis: %v", err)
 	}
+
+	slotManager := redisutil.NewSlotManager(rdb)
+	slotReleaseWorker := worker.NewSlotReleaseWorker(db, slotManager)
+	go slotReleaseWorker.Start(context.Background())
 
 	gin.SetMode(cfg.Server.Mode)
 

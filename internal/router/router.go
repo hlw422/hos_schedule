@@ -102,6 +102,7 @@ func Register(r *gin.Engine, db *gorm.DB, rdb *redis.Client, cfg *config.Config)
 
 		admin := api.Group("/admin")
 		admin.Use(middleware.Auth(cfg))
+		admin.Use(middleware.AdminRequired())
 		{
 			admin.PUT("/hospitals/:id", adminHandler.UpdateHospital)
 			admin.POST("/hospitals/campuses", adminHandler.AddCampus)
