@@ -39,8 +39,11 @@ type JWTConfig struct {
 }
 
 type WechatConfig struct {
-	AppID  string `mapstructure:"appid"`
-	Secret string `mapstructure:"secret"`
+	AppID     string `mapstructure:"appid"`
+	Secret    string `mapstructure:"secret"`
+	MchID     string `mapstructure:"mch_id"`
+	APIKey    string `mapstructure:"api_key"`
+	NotifyURL string `mapstructure:"notify_url"`
 }
 
 func Load() (*Config, error) {

@@ -2,9 +2,11 @@ package handler
 
 import (
 	"strconv"
+	"time"
 
 	"hos_schedule/internal/model"
 	"hos_schedule/internal/pkg/response"
+	redisutil "hos_schedule/internal/pkg/redis"
 	"hos_schedule/internal/service"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +18,7 @@ type AdminHandler struct {
 	doctorService      *service.DoctorService
 	scheduleService    *service.ScheduleService
 	appointmentService *service.AppointmentService
+	slotManager        *redisutil.SlotManager
 }
 
 func NewAdminHandler(
@@ -24,6 +27,7 @@ func NewAdminHandler(
 	doctorService *service.DoctorService,
 	scheduleService *service.ScheduleService,
 	appointmentService *service.AppointmentService,
+	slotManager *redisutil.SlotManager,
 ) *AdminHandler {
 	return &AdminHandler{
 		hospitalService:    hospitalService,
@@ -31,6 +35,7 @@ func NewAdminHandler(
 		doctorService:      doctorService,
 		scheduleService:    scheduleService,
 		appointmentService: appointmentService,
+		slotManager:        slotManager,
 	}
 }
 
@@ -104,7 +109,10 @@ func (h *AdminHandler) CreateDoctor(c *gin.Context) {
 		response.BadRequest(c, "Invalid request")
 		return
 	}
-	// TODO: 调用 service 创建
+	if err := h.doctorService.Create(&doc); err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
 	response.Success(c, doc)
 }
 
@@ -149,24 +157,48 @@ func (h *AdminHandler) CreateSchedule(c *gin.Context) {
 		response.BadRequest(c, "Invalid request")
 		return
 	}
-	// TODO: 调用 service 创建，初始化 Redis 号源
+	sched.RemainCount = sched.TotalCount
+	sched.UsedCount = 0
+	if err := h.scheduleService.Create(&sched); err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+	h.slotManager.InitSlot(c.Request.Context(), sched.ID, sched.RemainCount)
 	response.Success(c, sched)
 }
 
 func (h *AdminHandler) BatchCreateSchedule(c *gin.Context) {
 	var req struct {
-		DoctorID   int64    `json:"doctor_id"`
-		CampusID   int64    `json:"campus_id"`
-		Dates      []string `json:"dates"`
-		TimePeriod string   `json:"time_period"`
-		TotalCount int      `json:"total_count"`
+		DoctorID   int64    `json:"doctor_id" binding:"required"`
+		CampusID   int64    `json:"campus_id" binding:"required"`
+		Dates      []string `json:"dates" binding:"required"`
+		TimePeriod string   `json:"time_period" binding:"required"`
+		TotalCount int      `json:"total_count" binding:"required"`
+		Fee        float64  `json:"fee"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.BadRequest(c, "Invalid request")
 		return
 	}
-	// TODO: 批量创建排班
-	response.Success(c, req)
+
+	var created []model.Schedule
+	for _, date := range req.Dates {
+		sched := &model.Schedule{
+			DoctorID:    req.DoctorID,
+			CampusID:    req.CampusID,
+			Date:        date,
+			TimePeriod:  req.TimePeriod,
+			TotalCount:  req.TotalCount,
+			RemainCount: req.TotalCount,
+			Fee:         req.Fee,
+		}
+		if err := h.scheduleService.Create(sched); err != nil {
+			continue
+		}
+		h.slotManager.InitSlot(c.Request.Context(), sched.ID, sched.RemainCount)
+		created = append(created, *sched)
+	}
+	response.Success(c, created)
 }
 
 func (h *AdminHandler) UpdateSchedule(c *gin.Context) {
@@ -201,18 +233,32 @@ func (h *AdminHandler) ListAppointments(c *gin.Context) {
 	date := c.Query("date")
 	status := c.Query("status")
 
-	_ = doctorID
-	_ = date
+	var appointments []model.Appointment
+	var err error
+
+	if doctorID > 0 && date != "" {
+		appointments, err = h.appointmentService.ListByDoctor(doctorID, date)
+	} else {
+		appointments = []model.Appointment{}
+	}
+
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+
 	_ = status
-	// TODO: 调用 service 查询预约列表
-	response.Success(c, []interface{}{})
+	response.Success(c, appointments)
 }
 
 func (h *AdminHandler) GetAppointmentStats(c *gin.Context) {
-	// TODO: 统计今日预约量、取消量、到诊率
-	response.Success(c, gin.H{
-		"today_total":   0,
-		"today_cancel":  0,
-		"today_visited": 0,
-	})
+	date := c.DefaultQuery("date", time.Now().Format("2006-01-02"))
+
+	stats, err := h.appointmentService.GetStats(date)
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+
+	response.Success(c, stats)
 }

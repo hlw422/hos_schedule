@@ -26,8 +26,18 @@ func (r *DoctorRepo) GetByID(id int64) (*model.Doctor, error) {
 	return &doctor, err
 }
 
+func (r *DoctorRepo) GetByUserID(userID int64) (*model.Doctor, error) {
+	var doctor model.Doctor
+	err := r.db.Where("user_id = ?", userID).First(&doctor).Error
+	return &doctor, err
+}
+
 func (r *DoctorRepo) ListRecommended(limit int) ([]model.Doctor, error) {
 	var doctors []model.Doctor
 	err := r.db.Where("status = ?", 1).Limit(limit).Find(&doctors).Error
 	return doctors, err
+}
+
+func (r *DoctorRepo) Create(doctor *model.Doctor) error {
+	return r.db.Create(doctor).Error
 }

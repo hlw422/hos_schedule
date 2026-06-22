@@ -21,6 +21,14 @@ func (s *DoctorService) GetByID(id int64) (*model.Doctor, error) {
 	return s.repo.GetByID(id)
 }
 
+func (s *DoctorService) GetByUserID(userID int64) (*model.Doctor, error) {
+	return s.repo.GetByUserID(userID)
+}
+
 func (s *DoctorService) ListRecommended(limit int) ([]model.Doctor, error) {
 	return s.repo.ListRecommended(limit)
+}
+
+func (s *DoctorService) Create(doctor *model.Doctor) error {
+	return s.repo.Create(doctor)
 }

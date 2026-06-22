@@ -23,3 +23,6 @@ jwt:
 wechat:
   appid: your-appid
   secret: your-secret
+  mch_id: your-mch-id
+  api_key: your-api-key
+  notify_url: http://your-domain/api/v1/payments/callback

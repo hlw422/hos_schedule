@@ -54,6 +54,10 @@ func (r *ScheduleRepo) DecrementRemain(id int64) error {
 	return result.Error
 }
 
+func (r *ScheduleRepo) Create(schedule *model.Schedule) error {
+	return r.db.Create(schedule).Error
+}
+
 func (r *ScheduleRepo) IncrementRemain(id int64) error {
 	return r.db.Model(&model.Schedule{}).
 		Where("id = ?", id).

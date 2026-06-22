@@ -21,6 +21,10 @@ func (s *ScheduleService) ListByDepartment(departmentID int64, date string) ([]m
 	return s.repo.ListByDepartment(departmentID, date)
 }
 
+func (s *ScheduleService) Create(schedule *model.Schedule) error {
+	return s.repo.Create(schedule)
+}
+
 func (s *ScheduleService) GetByID(id int64) (*model.Schedule, error) {
 	return s.repo.GetByID(id)
 }

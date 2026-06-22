@@ -133,6 +133,34 @@ func (s *AppointmentService) ListByDoctor(doctorID int64, date string) ([]model.
 	return s.appointmentRepo.ListByDoctor(doctorID, date)
 }
 
+func (s *AppointmentService) GetStats(date string) (map[string]int64, error) {
+	total, err := s.appointmentRepo.CountByDate(date)
+	if err != nil {
+		return nil, err
+	}
+	cancelled, _ := s.appointmentRepo.CountByDateAndStatus(date, "CANCELLED")
+	completed, _ := s.appointmentRepo.CountByDateAndStatus(date, "COMPLETED")
+	paid, _ := s.appointmentRepo.CountByDateAndStatus(date, "PAID")
+
+	return map[string]int64{
+		"total":     total,
+		"cancelled": cancelled,
+		"completed": completed,
+		"paid":      paid,
+	}, nil
+}
+
+func (s *AppointmentService) GetMonthlyTrend(year, month int) ([]struct {
+	Date  string `json:"date"`
+	Count int64  `json:"count"`
+}, error) {
+	return s.appointmentRepo.GetMonthlyTrend(year, month)
+}
+
+func (s *AppointmentService) UpdatePayID(id int64, payID string) error {
+	return s.db.Model(&model.Appointment{}).Where("id = ?", id).Update("pay_id", payID).Error
+}
+
 func (s *AppointmentService) HandlePaymentCallback(ctx context.Context, payID string, amount float64) error {
 	appointment, err := s.appointmentRepo.GetByPayID(payID)
 	if err != nil {

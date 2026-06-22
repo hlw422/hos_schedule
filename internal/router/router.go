@@ -86,7 +86,8 @@ func Register(r *gin.Engine, db *gorm.DB, rdb *redis.Client, cfg *config.Config)
 		auth.GET("/appointments/:id", appointmentHandler.GetByID)
 		auth.PUT("/appointments/:id/cancel", appointmentHandler.Cancel)
 
-		paymentHandler := handler.NewPaymentHandler(appointmentService)
+		payClient := wechat.NewPayClient(cfg.Wechat.AppID, cfg.Wechat.MchID, cfg.Wechat.APIKey, cfg.Wechat.NotifyURL)
+		paymentHandler := handler.NewPaymentHandler(appointmentService, payClient)
 		api.POST("/payments/callback", paymentHandler.WechatPayCallback)
 		auth.POST("/payments/:id/create", paymentHandler.CreatePayment)
 
@@ -101,7 +102,7 @@ func Register(r *gin.Engine, db *gorm.DB, rdb *redis.Client, cfg *config.Config)
 		auth.GET("/doctor/appointments", doctorHandler.GetTodayAppointments)
 
 		adminHandler := handler.NewAdminHandler(
-			hospitalService, departmentService, doctorService, scheduleService, appointmentService,
+			hospitalService, departmentService, doctorService, scheduleService, appointmentService, slotManager,
 		)
 
 		admin := api.Group("/admin")

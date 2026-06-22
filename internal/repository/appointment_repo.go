@@ -74,3 +74,66 @@ func (r *AppointmentRepo) Exists(userID, doctorID int64, date, timePeriod string
 		Count(&count).Error
 	return count > 0, err
 }
+
+func (r *AppointmentRepo) CountByDate(date string) (int64, error) {
+	var count int64
+	err := r.db.Model(&model.Appointment{}).Where("date = ?", date).Count(&count).Error
+	return count, err
+}
+
+func (r *AppointmentRepo) CountByDateAndStatus(date, status string) (int64, error) {
+	var count int64
+	err := r.db.Model(&model.Appointment{}).Where("date = ? AND status = ?", date, status).Count(&count).Error
+	return count, err
+}
+
+func (r *AppointmentRepo) GetMonthlyTrend(year, month int) ([]struct {
+	Date  string `json:"date"`
+	Count int64  `json:"count"`
+}, error) {
+	var results []struct {
+		Date  string `json:"date"`
+		Count int64  `json:"count"`
+	}
+	err := r.db.Model(&model.Appointment{}).
+		Select("date, count(*) as count").
+		Where("EXTRACT(YEAR FROM date) = ? AND EXTRACT(MONTH FROM date) = ?", year, month).
+		Group("date").
+		Order("date ASC").
+		Scan(&results).Error
+	return results, err
+}
+
+func (r *AppointmentRepo) GetTopDepartments(limit int) ([]struct {
+	DepartmentID int64  `json:"department_id"`
+	Count        int64  `json:"count"`
+}, error) {
+	var results []struct {
+		DepartmentID int64  `json:"department_id"`
+		Count        int64  `json:"count"`
+	}
+	err := r.db.Model(&model.Appointment{}).
+		Select("doctor_id, count(*) as count").
+		Group("doctor_id").
+		Order("count DESC").
+		Limit(limit).
+		Scan(&results).Error
+	return results, err
+}
+
+func (r *AppointmentRepo) GetTopDoctors(limit int) ([]struct {
+	DoctorID int64  `json:"doctor_id"`
+	Count    int64  `json:"count"`
+}, error) {
+	var results []struct {
+		DoctorID int64  `json:"doctor_id"`
+		Count    int64  `json:"count"`
+	}
+	err := r.db.Model(&model.Appointment{}).
+		Select("doctor_id, count(*) as count").
+		Group("doctor_id").
+		Order("count DESC").
+		Limit(limit).
+		Scan(&results).Error
+	return results, err
+}

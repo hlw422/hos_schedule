@@ -4,6 +4,7 @@ import "time"
 
 type Doctor struct {
 	ID           int64     `gorm:"primaryKey" json:"id"`
+	UserID       int64     `gorm:"index" json:"user_id,omitempty"`
 	DepartmentID int64     `gorm:"index" json:"department_id"`
 	Name         string    `gorm:"size:50" json:"name"`
 	Avatar       string    `gorm:"size:255" json:"avatar,omitempty"`

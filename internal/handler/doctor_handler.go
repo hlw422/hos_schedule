@@ -2,6 +2,7 @@ package handler
 
 import (
 	"strconv"
+	"time"
 
 	"hos_schedule/internal/pkg/response"
 	"hos_schedule/internal/service"
@@ -55,12 +56,21 @@ func (h *DoctorHandler) GetByID(c *gin.Context) {
 
 func (h *DoctorHandler) GetMySchedules(c *gin.Context) {
 	userID := c.GetInt64("user_id")
-
+	doctor, err := h.service.GetByUserID(userID)
+	if err != nil {
+		response.NotFound(c, "Doctor not found")
+		return
+	}
 	startDate := c.Query("start_date")
 	endDate := c.Query("end_date")
-
+	if startDate == "" {
+		startDate = time.Now().Format("2006-01-02")
+	}
+	if endDate == "" {
+		endDate = time.Now().AddDate(0, 0, 7).Format("2006-01-02")
+	}
 	response.Success(c, gin.H{
-		"user_id":    userID,
+		"doctor_id":  doctor.ID,
 		"start_date": startDate,
 		"end_date":   endDate,
 	})
@@ -68,8 +78,14 @@ func (h *DoctorHandler) GetMySchedules(c *gin.Context) {
 
 func (h *DoctorHandler) GetTodayAppointments(c *gin.Context) {
 	userID := c.GetInt64("user_id")
-
+	doctor, err := h.service.GetByUserID(userID)
+	if err != nil {
+		response.NotFound(c, "Doctor not found")
+		return
+	}
+	today := time.Now().Format("2006-01-02")
 	response.Success(c, gin.H{
-		"user_id": userID,
+		"doctor_id": doctor.ID,
+		"date":      today,
 	})
 }
