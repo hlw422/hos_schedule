@@ -95,5 +95,32 @@ func Register(r *gin.Engine, db *gorm.DB, rdb *redis.Client, cfg *config.Config)
 
 		auth.GET("/doctor/schedules", doctorHandler.GetMySchedules)
 		auth.GET("/doctor/appointments", doctorHandler.GetTodayAppointments)
+
+		adminHandler := handler.NewAdminHandler(
+			hospitalService, departmentService, doctorService, scheduleService, appointmentService,
+		)
+
+		admin := api.Group("/admin")
+		admin.Use(middleware.Auth(cfg))
+		{
+			admin.PUT("/hospitals/:id", adminHandler.UpdateHospital)
+			admin.POST("/hospitals/campuses", adminHandler.AddCampus)
+
+			admin.POST("/departments", adminHandler.CreateDepartment)
+			admin.PUT("/departments/:id", adminHandler.UpdateDepartment)
+			admin.DELETE("/departments/:id", adminHandler.DeleteDepartment)
+
+			admin.POST("/doctors", adminHandler.CreateDoctor)
+			admin.PUT("/doctors/:id", adminHandler.UpdateDoctor)
+			admin.PUT("/doctors/:id/status", adminHandler.UpdateDoctorStatus)
+
+			admin.POST("/schedules", adminHandler.CreateSchedule)
+			admin.POST("/schedules/batch", adminHandler.BatchCreateSchedule)
+			admin.PUT("/schedules/:id", adminHandler.UpdateSchedule)
+			admin.DELETE("/schedules/:id", adminHandler.DeleteSchedule)
+
+			admin.GET("/appointments", adminHandler.ListAppointments)
+			admin.GET("/appointments/stats", adminHandler.GetAppointmentStats)
+		}
 	}
 }
