@@ -101,7 +101,7 @@ func Register(r *gin.Engine, db *gorm.DB, rdb *redis.Client, cfg *config.Config)
 
 		notificationRepo := repository.NewNotificationRepo(db)
 		wechatClient := wechat.NewClient(&cfg.Wechat)
-		notificationService := service.NewNotificationService(notificationRepo, wechatClient)
+		notificationService := service.NewNotificationService(notificationRepo, wechatClient, &cfg.SMS)
 		notificationHandler := handler.NewNotificationHandler(notificationService)
 
 		auth.POST("/notifications/subscribe", notificationHandler.Subscribe)

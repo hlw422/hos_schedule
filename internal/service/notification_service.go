@@ -1,6 +1,7 @@
 package service
 
 import (
+	"hos_schedule/internal/config"
 	"hos_schedule/internal/model"
 	"hos_schedule/internal/pkg/sms"
 	"hos_schedule/internal/pkg/wechat"
@@ -13,11 +14,11 @@ type NotificationService struct {
 	sms    *sms.Client
 }
 
-func NewNotificationService(repo *repository.NotificationRepo, wechat *wechat.Client) *NotificationService {
+func NewNotificationService(repo *repository.NotificationRepo, wechat *wechat.Client, smsCfg *config.SMSConfig) *NotificationService {
 	return &NotificationService{
 		repo:   repo,
 		wechat: wechat,
-		sms:    sms.NewClient(),
+		sms:    sms.NewClient(smsCfg),
 	}
 }
 

@@ -10,6 +10,7 @@ type Config struct {
 	Redis    RedisConfig    `mapstructure:"redis"`
 	JWT      JWTConfig      `mapstructure:"jwt"`
 	Wechat   WechatConfig   `mapstructure:"wechat"`
+	SMS      SMSConfig      `mapstructure:"sms"`
 }
 
 type ServerConfig struct {
@@ -44,6 +45,15 @@ type WechatConfig struct {
 	MchID     string `mapstructure:"mch_id"`
 	APIKey    string `mapstructure:"api_key"`
 	NotifyURL string `mapstructure:"notify_url"`
+}
+
+type SMSConfig struct {
+	Provider   string `mapstructure:"provider"`
+	SecretID   string `mapstructure:"secret_id"`
+	SecretKey  string `mapstructure:"secret_key"`
+	AppID      string `mapstructure:"app_id"`
+	SignName   string `mapstructure:"sign_name"`
+	TemplateID string `mapstructure:"template_id"`
 }
 
 func Load() (*Config, error) {
