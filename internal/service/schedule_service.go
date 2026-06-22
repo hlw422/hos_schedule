@@ -28,3 +28,11 @@ func (s *ScheduleService) Create(schedule *model.Schedule) error {
 func (s *ScheduleService) GetByID(id int64) (*model.Schedule, error) {
 	return s.repo.GetByID(id)
 }
+
+func (s *ScheduleService) Update(schedule *model.Schedule) error {
+	return s.repo.Update(schedule)
+}
+
+func (s *ScheduleService) Delete(id int64) error {
+	return s.repo.Delete(id)
+}

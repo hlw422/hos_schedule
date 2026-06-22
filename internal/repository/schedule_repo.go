@@ -66,3 +66,11 @@ func (r *ScheduleRepo) IncrementRemain(id int64) error {
 			"used_count":   gorm.Expr("used_count - 1"),
 		}).Error
 }
+
+func (r *ScheduleRepo) Update(schedule *model.Schedule) error {
+	return r.db.Save(schedule).Error
+}
+
+func (r *ScheduleRepo) Delete(id int64) error {
+	return r.db.Delete(&model.Schedule{}, id).Error
+}

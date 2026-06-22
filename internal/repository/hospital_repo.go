@@ -37,3 +37,17 @@ func (r *HospitalRepo) GetCampusByID(id int64) (*model.Campus, error) {
 	err := r.db.First(&campus, id).Error
 	return &campus, err
 }
+
+func (r *HospitalRepo) GetAllCampuses() ([]model.Campus, error) {
+	var campuses []model.Campus
+	err := r.db.Where("status = ?", 1).Find(&campuses).Error
+	return campuses, err
+}
+
+func (r *HospitalRepo) Update(hospital *model.Hospital) error {
+	return r.db.Save(hospital).Error
+}
+
+func (r *HospitalRepo) CreateCampus(campus *model.Campus) error {
+	return r.db.Create(campus).Error
+}

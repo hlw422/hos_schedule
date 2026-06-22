@@ -48,6 +48,10 @@ func Register(r *gin.Engine, db *gorm.DB, rdb *redis.Client, cfg *config.Config)
 		api.GET("/hospitals/:id", hospitalHandler.GetByID)
 		api.GET("/hospitals/:id/campuses", hospitalHandler.GetCampuses)
 
+		navigationHandler := handler.NewNavigationHandler(hospitalService)
+		api.GET("/navigation/:campus_id", navigationHandler.GetNavigationInfo)
+		api.GET("/navigation/nearby", navigationHandler.GetNearbyCampuses)
+
 		api.GET("/departments", departmentHandler.List)
 		api.GET("/departments/:id", departmentHandler.GetByID)
 
@@ -64,6 +68,10 @@ func Register(r *gin.Engine, db *gorm.DB, rdb *redis.Client, cfg *config.Config)
 
 		api.GET("/schedules", scheduleHandler.List)
 		api.GET("/schedules/:id", scheduleHandler.GetByID)
+
+		recommendHandler := handler.NewRecommendHandler(doctorService, departmentService)
+		api.GET("/recommend/departments", recommendHandler.GetHotDepartments)
+		api.GET("/recommend/doctors", recommendHandler.GetRecommendedDoctors)
 
 		patientRepo := repository.NewPatientRepo(db)
 		patientService := service.NewPatientService(patientRepo)

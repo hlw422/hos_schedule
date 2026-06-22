@@ -32,3 +32,11 @@ func (s *DoctorService) ListRecommended(limit int) ([]model.Doctor, error) {
 func (s *DoctorService) Create(doctor *model.Doctor) error {
 	return s.repo.Create(doctor)
 }
+
+func (s *DoctorService) Update(doctor *model.Doctor) error {
+	return s.repo.Update(doctor)
+}
+
+func (s *DoctorService) UpdateStatus(id int64, status int8) error {
+	return s.repo.UpdateStatus(id, status)
+}

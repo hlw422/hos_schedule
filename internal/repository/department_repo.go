@@ -35,3 +35,15 @@ func (r *DepartmentRepo) GetByID(id int64) (*model.Department, error) {
 	err := r.db.First(&department, id).Error
 	return &department, err
 }
+
+func (r *DepartmentRepo) Create(dept *model.Department) error {
+	return r.db.Create(dept).Error
+}
+
+func (r *DepartmentRepo) Update(dept *model.Department) error {
+	return r.db.Save(dept).Error
+}
+
+func (r *DepartmentRepo) Delete(id int64) error {
+	return r.db.Delete(&model.Department{}, id).Error
+}

@@ -41,3 +41,11 @@ func (r *DoctorRepo) ListRecommended(limit int) ([]model.Doctor, error) {
 func (r *DoctorRepo) Create(doctor *model.Doctor) error {
 	return r.db.Create(doctor).Error
 }
+
+func (r *DoctorRepo) Update(doctor *model.Doctor) error {
+	return r.db.Save(doctor).Error
+}
+
+func (r *DoctorRepo) UpdateStatus(id int64, status int8) error {
+	return r.db.Model(&model.Doctor{}).Where("id = ?", id).Update("status", status).Error
+}

@@ -52,7 +52,10 @@ func (h *AdminHandler) UpdateHospital(c *gin.Context) {
 		return
 	}
 	hospital.ID = id
-	// TODO: 调用 service 更新医院信息
+	if err := h.hospitalService.Update(&hospital); err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
 	response.Success(c, hospital)
 }
 
@@ -62,7 +65,10 @@ func (h *AdminHandler) AddCampus(c *gin.Context) {
 		response.BadRequest(c, "Invalid request")
 		return
 	}
-	// TODO: 调用 service 添加院区
+	if err := h.hospitalService.CreateCampus(&campus); err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
 	response.Success(c, campus)
 }
 
@@ -72,7 +78,10 @@ func (h *AdminHandler) CreateDepartment(c *gin.Context) {
 		response.BadRequest(c, "Invalid request")
 		return
 	}
-	// TODO: 调用 service 创建
+	if err := h.departmentService.Create(&dept); err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
 	response.Success(c, dept)
 }
 
@@ -89,7 +98,10 @@ func (h *AdminHandler) UpdateDepartment(c *gin.Context) {
 		return
 	}
 	dept.ID = id
-	// TODO: 调用 service 更新
+	if err := h.departmentService.Update(&dept); err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
 	response.Success(c, dept)
 }
 
@@ -99,7 +111,10 @@ func (h *AdminHandler) DeleteDepartment(c *gin.Context) {
 		response.BadRequest(c, "Invalid department ID")
 		return
 	}
-	// TODO: 调用 service 删除
+	if err := h.departmentService.Delete(id); err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
 	response.Success(c, gin.H{"id": id})
 }
 
@@ -129,7 +144,10 @@ func (h *AdminHandler) UpdateDoctor(c *gin.Context) {
 		return
 	}
 	doc.ID = id
-	// TODO: 调用 service 更新
+	if err := h.doctorService.Update(&doc); err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
 	response.Success(c, doc)
 }
 
@@ -147,7 +165,10 @@ func (h *AdminHandler) UpdateDoctorStatus(c *gin.Context) {
 		response.BadRequest(c, "Invalid request")
 		return
 	}
-	// TODO: 调用 service 启用/停用医生
+	if err := h.doctorService.UpdateStatus(id, req.Status); err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
 	response.Success(c, gin.H{"id": id, "status": req.Status})
 }
 
@@ -214,7 +235,10 @@ func (h *AdminHandler) UpdateSchedule(c *gin.Context) {
 		return
 	}
 	sched.ID = id
-	// TODO: 调用 service 更新
+	if err := h.scheduleService.Update(&sched); err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
 	response.Success(c, sched)
 }
 
@@ -224,7 +248,11 @@ func (h *AdminHandler) DeleteSchedule(c *gin.Context) {
 		response.BadRequest(c, "Invalid schedule ID")
 		return
 	}
-	// TODO: 调用 service 删除，释放 Redis 号源
+	if err := h.scheduleService.Delete(id); err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+	h.slotManager.ReleaseSlot(c.Request.Context(), id)
 	response.Success(c, gin.H{"id": id})
 }
 
